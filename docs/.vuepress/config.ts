@@ -1,15 +1,18 @@
 import path from 'path'
 import utils from './util'
 import { defineUserConfig } from 'vuepress'
-import type { DefaultThemeOptions } from 'vuepress'
+import { defaultTheme } from '@vuepress/theme-default'
+import { viteBundler } from '@vuepress/bundler-vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
 const componentFiles = utils
   .getFiles(path.resolve(__dirname, '../guide'))
   .map((item) => item.replace(/(\.md)$/, ''))
   .filter((item) => !['el-form', 'el-form-item', 'index'].includes(item))
+  .map((item) => `/guide/${item}.md`)
+console.log(componentFiles)
 
-export default defineUserConfig<DefaultThemeOptions>({
+export default defineUserConfig({
   // 站点配置
   title: 'Element-plus',
   description: 'Alibaba unified front-end form solution',
@@ -30,8 +33,7 @@ export default defineUserConfig<DefaultThemeOptions>({
       },
     ],
   ],
-  theme: 'vuepress-theme-dumi',
-  themeConfig: {
+  theme: defaultTheme({
     logo: '//img.alicdn.com/imgextra/i2/O1CN01Kq3OHU1fph6LGqjIz_!!6000000004056-55-tps-1141-150.svg',
     navbar: [
       {
@@ -50,9 +52,10 @@ export default defineUserConfig<DefaultThemeOptions>({
     sidebar: {
       '/guide/': ['/guide/index.md', ...componentFiles],
     },
+    sidebarDepth: 1,
     lastUpdated: true,
     smoothScroll: true,
-  },
+  }),
   markdown: {
     code: {
       lineNumbers: false,
@@ -76,7 +79,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     //   },
     // ],
   ],
-  bundlerConfig: {
+  bundler: viteBundler({
     viteOptions: {
       plugins: [
         vueJsx({
@@ -84,5 +87,7 @@ export default defineUserConfig<DefaultThemeOptions>({
         }),
       ],
     },
-  },
+    vuePluginOptions: {},
+  }),
+  bundlerConfig: {},
 })

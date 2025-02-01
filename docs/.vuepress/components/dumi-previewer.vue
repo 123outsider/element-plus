@@ -125,7 +125,9 @@ onMounted(() => {
     //     /\.jsx?|\.tsx?$/.test(props.demoPath) ? '' : '.vue'
     //   }?raw`
     // ).
-    demoStr.value = rawModules[`./../../demos/${props.demoPath}.vue`]
+    rawModules[`../../demos/${props.demoPath}.vue`]?.().then((raw) => {
+      demoStr.value = raw
+    })
   }
 })
 
